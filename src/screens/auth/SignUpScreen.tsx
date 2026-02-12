@@ -1,5 +1,5 @@
-// src/screens/auth/SignUpScreen.tsx
-import React, { useState, useEffect } from 'react';
+
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,24 +9,30 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParamList } from '../../types/navigation.types';
-import { useTheme } from '../../hooks/useTheme';
-import { useAuth } from '../../hooks/useAuth';
-import { validateEmail, validatePassword, validatePasswordMatch } from '../../utils/validators';
-import { ERROR_MESSAGES } from '../../utils/constants';
-import { Button, Input } from '../../components';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {AuthStackParamList} from '../../types/navigation.types';
+import {useTheme} from '../../hooks/useTheme';
+import {useAuth} from '../../hooks/useAuth';
+import {
+  validateEmail,
+  validatePassword,
+  validatePasswordMatch,
+} from '../../utils/validators';
+import {ERROR_MESSAGES} from '../../utils/constants';
+import {Button, Input} from '../../components';
 
-
-type SignUpScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'SignUp'>;
+type SignUpScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'SignUp'
+>;
 
 interface Props {
   navigation: SignUpScreenNavigationProp;
 }
 
-export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
-  const { theme } = useTheme();
-  const { signUp, loading, error, clearError } = useAuth();
+export const SignUpScreen: React.FC<Props> = ({navigation}) => {
+  const {theme} = useTheme();
+  const {signUp, loading, error, clearError} = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -73,20 +79,20 @@ export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
     if (!validateForm()) return;
 
     try {
-      await signUp({ email, password, confirmPassword });
+      await signUp({email, password, confirmPassword});
     } catch (err) {
-      // Error handled by useAuth hook
+
     }
   };
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      style={[styles.container, {backgroundColor: theme.colors.background}]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled">
-        <View style={[styles.content, { padding: theme.spacing.lg }]}>
+        <View style={[styles.content, {padding: theme.spacing.lg}]}>
           <Text
             style={[
               styles.title,
@@ -143,18 +149,18 @@ export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
             title="Sign Up"
             onPress={handleSignUp}
             loading={loading}
-            style={{ marginTop: theme.spacing.lg }}
+            style={{marginTop: theme.spacing.lg}}
           />
 
-          <View style={[styles.footer, { marginTop: theme.spacing.xl }]}>
-            <Text style={{ color: theme.colors.textSecondary }}>
+          <View style={[styles.footer, {marginTop: theme.spacing.xl}]}>
+            <Text style={{color: theme.colors.textSecondary}}>
               Already have an account?{' '}
             </Text>
             <Button
               title="Login"
               onPress={() => navigation.navigate('Login')}
               variant="outline"
-              style={{ marginTop: theme.spacing.sm }}
+              style={{marginTop: theme.spacing.sm}}
             />
           </View>
         </View>
@@ -185,3 +191,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+

@@ -1,18 +1,18 @@
-// src/database/index.ts
-import { Task } from '../types/task.types';
-import { getRealm, initializeRealm } from './realm/realmConfig';
-import { TaskSchema } from './realm/schemas';
 
+import {Task} from '../types/task.types';
+import {getRealm, initializeRealm} from './realm/realmConfig';
+import {TaskSchema} from './realm/schemas';
 
 export const DatabaseService = {
   initialize: async (): Promise<void> => {
     await initializeRealm();
   },
 
-  // Task operations
   getAllTasks: (userId: string): Task[] => {
     const realm = getRealm();
-    const tasks = realm.objects<TaskSchema>('Task').filtered('userId == $0', userId);
+    const tasks = realm
+      .objects<TaskSchema>('Task')
+      .filtered('userId == $0', userId);
     return tasks.map(task => ({
       id: task.id,
       title: task.title,
@@ -55,7 +55,7 @@ export const DatabaseService = {
     realm.write(() => {
       const task = realm.objectForPrimaryKey<TaskSchema>('Task', id);
       if (task) {
-        Object.assign(task, updates, { updatedAt: new Date() });
+        Object.assign(task, updates, {updatedAt: new Date()});
       }
     });
   },
@@ -107,4 +107,5 @@ export const DatabaseService = {
   },
 };
 
-export { initializeRealm };
+export {initializeRealm};
+

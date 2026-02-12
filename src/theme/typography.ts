@@ -1,4 +1,4 @@
-// src/theme/typography.ts
+
 export const typography = {
   fontFamily: {
     regular: 'System',
@@ -28,3 +28,4 @@ export const typography = {
 };
 
 export type Typography = typeof typography;
+

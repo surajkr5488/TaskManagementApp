@@ -1,11 +1,9 @@
-// src/hooks/useTheme.ts
-import { useSelector, useDispatch } from 'react-redux';
 
+import {useSelector, useDispatch} from 'react-redux';
 
-import { darkTheme, lightTheme, Theme } from '../theme';
-import { setThemeMode, toggleTheme } from '../store/slices/themeSlice';
-import { AppDispatch, RootState } from '../store/store';
-
+import {darkTheme, lightTheme, Theme} from '../theme';
+import {setThemeMode, toggleTheme} from '../store/slices/themeSlice';
+import {AppDispatch, RootState} from '../store/store';
 
 export const useTheme = (): {
   theme: Theme;
@@ -33,3 +31,4 @@ export const useTheme = (): {
     setTheme: handleSetTheme,
   };
 };
+

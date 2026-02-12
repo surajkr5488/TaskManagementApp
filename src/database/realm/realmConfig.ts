@@ -1,6 +1,6 @@
-// src/database/realm/realmConfig.ts
+
 import Realm from 'realm';
-import { schemas } from './schemas';
+import {schemas} from './schemas';
 
 let realmInstance: Realm | null = null;
 
@@ -14,9 +14,9 @@ export const initializeRealm = async (): Promise<Realm> => {
       schema: schemas,
       schemaVersion: 1,
       migration: (oldRealm, newRealm) => {
-        // Handle migrations if needed
+
         if (oldRealm.schemaVersion < 1) {
-          // Migration logic
+
         }
       },
     });
@@ -40,3 +40,4 @@ export const closeRealm = (): void => {
     realmInstance = null;
   }
 };
+

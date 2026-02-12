@@ -1,11 +1,10 @@
-// src/services/notificationService.ts
-import notifee, { AndroidImportance, TriggerType } from '@notifee/react-native';
-import { NOTIFICATION_CHANNELS } from '../utils/constants';
-import { Task } from '../types/task.types';
 
+import notifee, {AndroidImportance, TriggerType} from '@notifee/react-native';
+import {NOTIFICATION_CHANNELS} from '../utils/constants';
+import {Task} from '../types/task.types';
 
 export const NotificationService = {
-  // Initialize notification channels
+
   initialize: async (): Promise<void> => {
     await notifee.createChannel({
       id: NOTIFICATION_CHANNELS.TASK_REMINDERS.id,
@@ -21,11 +20,9 @@ export const NotificationService = {
       importance: AndroidImportance.LOW,
     });
 
-    // Request permissions
     await notifee.requestPermission();
   },
 
-  // Schedule task reminder
   scheduleTaskReminder: async (task: Task): Promise<void> => {
     if (!task.reminderTime) return;
 
@@ -54,12 +51,10 @@ export const NotificationService = {
     );
   },
 
-  // Cancel task reminder
   cancelTaskReminder: async (taskId: string): Promise<void> => {
     await notifee.cancelNotification(taskId);
   },
 
-  // Show immediate notification
   showNotification: async (title: string, body: string): Promise<void> => {
     await notifee.displayNotification({
       title,
@@ -74,7 +69,6 @@ export const NotificationService = {
     });
   },
 
-  // Show sync notification
   showSyncNotification: async (message: string): Promise<void> => {
     await notifee.displayNotification({
       title: 'Sync Status',
@@ -86,13 +80,12 @@ export const NotificationService = {
     });
   },
 
-  // Get all scheduled notifications
   getScheduledNotifications: async () => {
     return await notifee.getTriggerNotifications();
   },
 
-  // Cancel all notifications
   cancelAllNotifications: async (): Promise<void> => {
     await notifee.cancelAllNotifications();
   },
 };
+

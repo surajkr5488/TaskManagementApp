@@ -1,4 +1,4 @@
-// src/types/auth.types.ts
+
 export interface User {
   uid: string;
   email: string | null;
@@ -22,3 +22,4 @@ export interface SignUpCredentials {
   password: string;
   confirmPassword: string;
 }
+

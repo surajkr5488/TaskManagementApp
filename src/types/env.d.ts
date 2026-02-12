@@ -1,4 +1,4 @@
-// src/types/env.d.ts
+
 declare module '@env' {
   export const ENV: string;
   export const API_URL: string;
@@ -9,3 +9,4 @@ declare module '@env' {
   export const FIREBASE_MESSAGING_SENDER_ID: string;
   export const FIREBASE_APP_ID: string;
 }
+

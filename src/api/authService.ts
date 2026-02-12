@@ -1,17 +1,15 @@
-// src/api/authService.ts
-import { firebaseAuth } from './firebaseConfig';
-import { User } from '@types/auth.types';
+
+import {firebaseAuth} from './firebaseConfig';
+import {User} from '@types/auth.types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { STORAGE_KEYS } from '@utils/constants';
+import {STORAGE_KEYS} from '@utils/constants';
 
 export const AuthService = {
-  // Sign up with email and password
+
   signUp: async (email: string, password: string): Promise<User> => {
     try {
-      const userCredential = await firebaseAuth().createUserWithEmailAndPassword(
-        email,
-        password,
-      );
+      const userCredential =
+        await firebaseAuth().createUserWithEmailAndPassword(email, password);
       const user: User = {
         uid: userCredential.user.uid,
         email: userCredential.user.email,
@@ -25,7 +23,6 @@ export const AuthService = {
     }
   },
 
-  // Login with email and password
   login: async (email: string, password: string): Promise<User> => {
     try {
       const userCredential = await firebaseAuth().signInWithEmailAndPassword(
@@ -45,7 +42,6 @@ export const AuthService = {
     }
   },
 
-  // Logout
   logout: async (): Promise<void> => {
     try {
       await firebaseAuth().signOut();
@@ -57,7 +53,6 @@ export const AuthService = {
     }
   },
 
-  // Get current user
   getCurrentUser: (): User | null => {
     const user = firebaseAuth().currentUser;
     if (!user) return null;
@@ -68,12 +63,10 @@ export const AuthService = {
     };
   },
 
-  // Check if user is authenticated
   isAuthenticated: (): boolean => {
     return firebaseAuth().currentUser !== null;
   },
 
-  // Listen to auth state changes
   onAuthStateChanged: (callback: (user: User | null) => void): (() => void) => {
     return firebaseAuth().onAuthStateChanged(firebaseUser => {
       if (firebaseUser) {
@@ -89,7 +82,6 @@ export const AuthService = {
     });
   },
 
-  // Get stored user data
   getStoredUser: async (): Promise<User | null> => {
     try {
       const userData = await AsyncStorage.getItem(STORAGE_KEYS.USER_DATA);
@@ -100,3 +92,4 @@ export const AuthService = {
     }
   },
 };
+

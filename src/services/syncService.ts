@@ -1,17 +1,18 @@
-// src/services/syncService.ts
+
 import NetInfo from '@react-native-community/netinfo';
-import { store } from '../store/store';
-import { setSyncStatus } from '../store/slices/taskSlice';
-import { DatabaseService } from '../database';
-import { TaskService } from '../api/taskService';
-import { Task } from '../types/task.types';
+import {store} from '../store/store';
+import {setSyncStatus} from '../store/slices/taskSlice';
+import {DatabaseService} from '../database';
+import {TaskService} from '../api/taskService';
+import {Task} from '../types/task.types';
 
 let syncInterval: NodeJS.Timeout | null = null;
-let syncQueue: Array<{ taskId: string; action: 'create' | 'update' | 'delete' }> = [];
+let syncQueue: Array<{taskId: string; action: 'create' | 'update' | 'delete'}> =
+  [];
 let isSyncing = false;
 
 export const SyncService = {
-  // Initialize sync service
+
   initialize: (): void => {
     NetInfo.addEventListener(state => {
       if (state.isConnected && state.isInternetReachable) {
@@ -72,9 +73,12 @@ export const SyncService = {
     }
   },
 
-  addToSyncQueue: (taskId: string, action: 'create' | 'update' | 'delete'): void => {
+  addToSyncQueue: (
+    taskId: string,
+    action: 'create' | 'update' | 'delete',
+  ): void => {
     syncQueue = syncQueue.filter(item => item.taskId !== taskId);
-    syncQueue.push({ taskId, action });
+    syncQueue.push({taskId, action});
   },
 
   processSyncQueue: async (): Promise<void> => {
@@ -109,7 +113,7 @@ export const SyncService = {
 
   syncTask: async (task: Task): Promise<boolean> => {
     try {
-      DatabaseService.updateTask(task.id, { synced: false });
+      DatabaseService.updateTask(task.id, {synced: false});
       const isOnline = await SyncService.isOnline();
       if (!isOnline) {
         SyncService.addToSyncQueue(task.id, 'update');
@@ -157,11 +161,18 @@ export const SyncService = {
   isOnline: async (): Promise<boolean> => {
     try {
       const netInfo = await NetInfo.fetch();
-      return netInfo.isConnected === true && netInfo.isInternetReachable === true;
+      return (
+        netInfo.isConnected === true && netInfo.isInternetReachable === true
+      );
     } catch (error) {
       return false;
     }
   },
 
-  getSyncQueueStatus: () => ({ count: syncQueue.length, isSyncing, items: syncQueue }),
+  getSyncQueueStatus: () => ({
+    count: syncQueue.length,
+    isSyncing,
+    items: syncQueue,
+  }),
 };
+

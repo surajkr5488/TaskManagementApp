@@ -1,9 +1,13 @@
-// src/store/slices/authSlice.ts
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
-import { AuthService } from '../../api/authService';
-import { AuthState, LoginCredentials, SignUpCredentials, User } from '../../types/auth.types';
+import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 
+import {AuthService} from '../../api/authService';
+import {
+  AuthState,
+  LoginCredentials,
+  SignUpCredentials,
+  User,
+} from '../../types/auth.types';
 
 const initialState: AuthState = {
   user: null,
@@ -12,12 +16,14 @@ const initialState: AuthState = {
   isAuthenticated: false,
 };
 
-// Async thunks
 export const signUp = createAsyncThunk(
   'auth/signUp',
-  async (credentials: SignUpCredentials, { rejectWithValue }) => {
+  async (credentials: SignUpCredentials, {rejectWithValue}) => {
     try {
-      const user = await AuthService.signUp(credentials.email, credentials.password);
+      const user = await AuthService.signUp(
+        credentials.email,
+        credentials.password,
+      );
       return user;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -27,9 +33,12 @@ export const signUp = createAsyncThunk(
 
 export const login = createAsyncThunk(
   'auth/login',
-  async (credentials: LoginCredentials, { rejectWithValue }) => {
+  async (credentials: LoginCredentials, {rejectWithValue}) => {
     try {
-      const user = await AuthService.login(credentials.email, credentials.password);
+      const user = await AuthService.login(
+        credentials.email,
+        credentials.password,
+      );
       return user;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -39,7 +48,7 @@ export const login = createAsyncThunk(
 
 export const logout = createAsyncThunk(
   'auth/logout',
-  async (_, { rejectWithValue }) => {
+  async (_, {rejectWithValue}) => {
     try {
       await AuthService.logout();
     } catch (error: any) {
@@ -50,7 +59,7 @@ export const logout = createAsyncThunk(
 
 export const checkAuthState = createAsyncThunk(
   'auth/checkAuthState',
-  async (_, { rejectWithValue }) => {
+  async (_, {rejectWithValue}) => {
     try {
       const user = await AuthService.getStoredUser();
       return user;
@@ -60,7 +69,6 @@ export const checkAuthState = createAsyncThunk(
   },
 );
 
-// Slice
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -69,13 +77,13 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.isAuthenticated = !!action.payload;
     },
-    clearError: (state) => {
+    clearError: state => {
       state.error = null;
     },
   },
-  extraReducers: (builder) => {
-    // Sign Up
-    builder.addCase(signUp.pending, (state) => {
+  extraReducers: builder => {
+
+    builder.addCase(signUp.pending, state => {
       state.loading = true;
       state.error = null;
     });
@@ -89,8 +97,7 @@ const authSlice = createSlice({
       state.error = action.payload as string;
     });
 
-    // Login
-    builder.addCase(login.pending, (state) => {
+    builder.addCase(login.pending, state => {
       state.loading = true;
       state.error = null;
     });
@@ -104,11 +111,10 @@ const authSlice = createSlice({
       state.error = action.payload as string;
     });
 
-    // Logout
-    builder.addCase(logout.pending, (state) => {
+    builder.addCase(logout.pending, state => {
       state.loading = true;
     });
-    builder.addCase(logout.fulfilled, (state) => {
+    builder.addCase(logout.fulfilled, state => {
       state.loading = false;
       state.user = null;
       state.isAuthenticated = false;
@@ -119,7 +125,6 @@ const authSlice = createSlice({
       state.error = action.payload as string;
     });
 
-    // Check Auth State
     builder.addCase(checkAuthState.fulfilled, (state, action) => {
       state.user = action.payload;
       state.isAuthenticated = !!action.payload;
@@ -127,5 +132,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, clearError } = authSlice.actions;
+export const {setUser, clearError} = authSlice.actions;
 export default authSlice.reducer;
+

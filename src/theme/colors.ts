@@ -1,4 +1,4 @@
-// src/theme/colors.ts
+
 export const lightColors = {
   primary: '#007AFF',
   secondary: '#5856D6',
@@ -36,3 +36,4 @@ export const darkColors = {
 };
 
 export type ThemeColors = typeof lightColors;
+

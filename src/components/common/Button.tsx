@@ -1,4 +1,4 @@
-// src/components/common/Button.tsx
+
 import React from 'react';
 import {
   TouchableOpacity,
@@ -8,8 +8,7 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import { useTheme } from '../../hooks/useTheme';
-
+import {useTheme} from '../../hooks/useTheme';
 
 interface ButtonProps {
   title: string;
@@ -30,7 +29,7 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   textStyle,
 }) => {
-  const { theme } = useTheme();
+  const {theme} = useTheme();
 
   const getButtonStyle = (): ViewStyle => {
     const baseStyle: ViewStyle = {
@@ -46,12 +45,16 @@ export const Button: React.FC<ButtonProps> = ({
       case 'primary':
         return {
           ...baseStyle,
-          backgroundColor: disabled ? theme.colors.disabled : theme.colors.primary,
+          backgroundColor: disabled
+            ? theme.colors.disabled
+            : theme.colors.primary,
         };
       case 'secondary':
         return {
           ...baseStyle,
-          backgroundColor: disabled ? theme.colors.disabled : theme.colors.secondary,
+          backgroundColor: disabled
+            ? theme.colors.disabled
+            : theme.colors.secondary,
         };
       case 'outline':
         return {
@@ -102,3 +105,4 @@ export const Button: React.FC<ButtonProps> = ({
     </TouchableOpacity>
   );
 };
+

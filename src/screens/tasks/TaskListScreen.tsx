@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,24 +10,27 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import { useTheme } from '../../hooks/useTheme';
-import { AppDispatch, RootState } from '../../store/store';
-import { useNetworkStatus } from '../../hooks/useNetworkStatus';
-import { deleteTask, fetchTasks, toggleTaskComplete } from '../../store/slices/taskSlice';
-import { Task } from '../../types/task.types';
-import { Loader } from '../../components';
+import {useTheme} from '../../hooks/useTheme';
+import {AppDispatch, RootState} from '../../store/store';
+import {useNetworkStatus} from '../../hooks/useNetworkStatus';
+import {
+  deleteTask,
+  fetchTasks,
+  toggleTaskComplete,
+} from '../../store/slices/taskSlice';
+import {Task} from '../../types/task.types';
+import {Loader} from '../../components';
 
+const {width} = Dimensions.get('window');
 
-const { width } = Dimensions.get('window');
-
-export const TaskListScreen: React.FC<any> = ({ navigation }) => {
-  const { theme } = useTheme();
+export const TaskListScreen: React.FC<any> = ({navigation}) => {
+  const {theme} = useTheme();
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { tasks, loading } = useSelector((state: RootState) => state.tasks);
-  const { isOnline } = useNetworkStatus();
+  const {user} = useSelector((state: RootState) => state.auth);
+  const {tasks, loading} = useSelector((state: RootState) => state.tasks);
+  const {isOnline} = useNetworkStatus();
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -45,7 +48,7 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
   };
 
   const handleToggleComplete = (taskId: string, completed: boolean) => {
-    dispatch(toggleTaskComplete({ taskId, completed: !completed }));
+    dispatch(toggleTaskComplete({taskId, completed: !completed}));
   };
 
   const handleDeleteTask = (taskId: string, taskTitle: string) => {
@@ -53,7 +56,7 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
       'Delete Task',
       `Are you sure you want to delete "${taskTitle}"?`,
       [
-        { text: 'Cancel', style: 'cancel' },
+        {text: 'Cancel', style: 'cancel'},
         {
           text: 'Delete',
           style: 'destructive',
@@ -63,7 +66,7 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
     );
   };
 
-  const TaskItem = ({ item, index }: { item: Task; index: number }) => {
+  const TaskItem = ({item, index}: {item: Task; index: number}) => {
     const [scaleAnim] = useState(new Animated.Value(0));
     const [fadeAnim] = useState(new Animated.Value(0));
 
@@ -110,23 +113,34 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
       });
     };
 
-    const isOverdue = item.reminderTime && new Date(item.reminderTime) < new Date() && !item.completed;
+    const isOverdue =
+      item.reminderTime &&
+      new Date(item.reminderTime) < new Date() &&
+      !item.completed;
 
-    // Safely get gradient colors
     const getGradientColors = () => {
       if (!theme?.colors) {
         return ['#6366F1', '#8B5CF6']; // fallback colors
       }
 
       if (item.completed) {
-        return [theme.colors.success || '#10B981', theme.colors.success || '#10B981'];
+        return [
+          theme.colors.success || '#10B981',
+          theme.colors.success || '#10B981',
+        ];
       }
 
       if (isOverdue) {
-        return [theme.colors.error || '#EF4444', theme.colors.warning || '#F59E0B'];
+        return [
+          theme.colors.error || '#EF4444',
+          theme.colors.warning || '#F59E0B',
+        ];
       }
 
-      return [theme.colors.primary || '#6366F1', theme.colors.accent || '#8B5CF6'];
+      return [
+        theme.colors.primary || '#6366F1',
+        theme.colors.accent || '#8B5CF6',
+      ];
     };
 
     return (
@@ -135,26 +149,26 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
           styles.taskContainer,
           {
             opacity: fadeAnim,
-            transform: [{ scale: scaleAnim }],
+            transform: [{scale: scaleAnim}],
           },
         ]}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('TaskDetail', { taskId: item.id })}
+          onPress={() => navigation.navigate('TaskDetail', {taskId: item.id})}
           activeOpacity={0.9}
           style={[
             styles.taskCard,
-            { backgroundColor: theme?.colors?.surface || '#FFFFFF' },
+            {backgroundColor: theme?.colors?.surface || '#FFFFFF'},
           ]}>
-          {/* Gradient Top Bar */}
+          {}
           <LinearGradient
             colors={getGradientColors()}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
             style={styles.gradientBar}
           />
 
           <View style={styles.taskContent}>
-            {/* Checkbox */}
+            {}
             <TouchableOpacity
               onPress={() => handleToggleComplete(item.id, item.completed)}
               style={[
@@ -168,19 +182,19 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
                     : 'transparent',
                 },
               ]}>
-              {item.completed && (
-                <Text style={styles.checkmark}>✓</Text>
-              )}
+              {item.completed && <Text style={styles.checkmark}>✓</Text>}
             </TouchableOpacity>
 
-            {/* Task Info */}
+            {}
             <View style={styles.taskInfo}>
               <Text
                 style={[
                   styles.taskTitle,
                   {
                     color: theme?.colors?.text || '#111827',
-                    textDecorationLine: item.completed ? 'line-through' : 'none',
+                    textDecorationLine: item.completed
+                      ? 'line-through'
+                      : 'none',
                     opacity: item.completed ? 0.6 : 1,
                   },
                 ]}
@@ -190,13 +204,16 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
 
               {item.description && (
                 <Text
-                  style={[styles.taskDescription, { color: theme?.colors?.textSecondary || '#6B7280' }]}
+                  style={[
+                    styles.taskDescription,
+                    {color: theme?.colors?.textSecondary || '#6B7280'},
+                  ]}
                   numberOfLines={2}>
                   {item.description}
                 </Text>
               )}
 
-              {/* Badges */}
+              {}
               <View style={styles.badges}>
                 {item.reminderTime && (
                   <View
@@ -213,7 +230,9 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
                       style={[
                         styles.badgeText,
                         {
-                          color: isOverdue ? theme?.colors?.error || '#EF4444' : theme?.colors?.primary || '#6366F1',
+                          color: isOverdue
+                            ? theme?.colors?.error || '#EF4444'
+                            : theme?.colors?.primary || '#6366F1',
                         },
                       ]}>
                       {formatDate(item.reminderTime)}
@@ -235,7 +254,9 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
                       style={[
                         styles.badgeText,
                         {
-                          color: isOverdue ? theme?.colors?.error || '#EF4444' : theme?.colors?.success || '#10B981',
+                          color: isOverdue
+                            ? theme?.colors?.error || '#EF4444'
+                            : theme?.colors?.success || '#10B981',
                         },
                       ]}>
                       {formatTime(item.reminderTime)}
@@ -246,11 +267,16 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
                   <View
                     style={[
                       styles.badge,
-                      { backgroundColor: `${theme?.colors?.warning || '#F59E0B'}15` },
+                      {
+                        backgroundColor: `${theme?.colors?.warning || '#F59E0B'}15`,
+                      },
                     ]}>
                     <Text style={styles.badgeEmoji}>⏳</Text>
                     <Text
-                      style={[styles.badgeText, { color: theme?.colors?.warning || '#F59E0B' }]}>
+                      style={[
+                        styles.badgeText,
+                        {color: theme?.colors?.warning || '#F59E0B'},
+                      ]}>
                       Syncing
                     </Text>
                   </View>
@@ -258,12 +284,12 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
               </View>
             </View>
 
-            {/* Delete Button */}
+            {}
             <TouchableOpacity
               onPress={() => handleDeleteTask(item.id, item.title)}
               style={[
                 styles.deleteButton,
-                { backgroundColor: `${theme?.colors?.error || '#EF4444'}15` },
+                {backgroundColor: `${theme?.colors?.error || '#EF4444'}15`},
               ]}>
               <Text style={styles.deleteIcon}>🗑️</Text>
             </TouchableOpacity>
@@ -273,7 +299,7 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
     );
   };
 
-  const renderTask = ({ item, index }: { item: Task; index: number }) => (
+  const renderTask = ({item, index}: {item: Task; index: number}) => (
     <TaskItem item={item} index={index} />
   );
 
@@ -282,19 +308,26 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme?.colors?.background || '#F9FAFB' }]}>
-      {/* Header with Gradient */}
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: theme?.colors?.background || '#F9FAFB'},
+      ]}>
+      {}
       <LinearGradient
-        colors={[theme?.colors?.primary || '#6366F1', theme?.colors?.accent || '#8B5CF6']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
+        colors={[
+          theme?.colors?.primary || '#6366F1',
+          theme?.colors?.accent || '#8B5CF6',
+        ]}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
         style={styles.header}>
         <Text style={styles.headerTitle}>✨ My Tasks</Text>
         <View style={styles.statusContainer}>
           <View
             style={[
               styles.statusDot,
-              { backgroundColor: isOnline ? '#34D399' : '#EF4444' },
+              {backgroundColor: isOnline ? '#34D399' : '#EF4444'},
             ]}
           />
           <Text style={styles.statusText}>
@@ -306,15 +339,23 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
       <FlatList
         data={tasks}
         renderItem={renderTask}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyEmoji}>📝</Text>
-            <Text style={[styles.emptyText, { color: theme?.colors?.textSecondary || '#6B7280' }]}>
+            <Text
+              style={[
+                styles.emptyText,
+                {color: theme?.colors?.textSecondary || '#6B7280'},
+              ]}>
               No tasks yet
             </Text>
-            <Text style={[styles.emptySubtext, { color: theme?.colors?.textTertiary || '#9CA3AF' }]}>
+            <Text
+              style={[
+                styles.emptySubtext,
+                {color: theme?.colors?.textTertiary || '#9CA3AF'},
+              ]}>
               Tap the + button to create your first task
             </Text>
           </View>
@@ -329,15 +370,18 @@ export const TaskListScreen: React.FC<any> = ({ navigation }) => {
         }
       />
 
-      {/* FAB with Gradient */}
+      {}
       <TouchableOpacity
         onPress={() => navigation.navigate('TaskDetail', {})}
         activeOpacity={0.9}
         style={styles.fabContainer}>
         <LinearGradient
-          colors={[theme?.colors?.primary || '#6366F1', theme?.colors?.accent || '#8B5CF6']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
+          colors={[
+            theme?.colors?.primary || '#6366F1',
+            theme?.colors?.accent || '#8B5CF6',
+          ]}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
           style={styles.fab}>
           <Text style={styles.fabText}>+</Text>
         </LinearGradient>
@@ -387,7 +431,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.1,
     shadowRadius: 12,
     elevation: 5,
@@ -488,7 +532,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
@@ -499,3 +543,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+

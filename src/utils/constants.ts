@@ -1,4 +1,4 @@
-// src/utils/constants.ts
+
 export const STORAGE_KEYS = {
   AUTH_TOKEN: '@auth_token',
   USER_DATA: '@user_data',
@@ -20,7 +20,8 @@ export const NOTIFICATION_CHANNELS = {
 } as const;
 
 export const ERROR_MESSAGES = {
-  NETWORK_ERROR: 'Network connection failed. Please check your internet connection.',
+  NETWORK_ERROR:
+    'Network connection failed. Please check your internet connection.',
   AUTH_ERROR: 'Authentication failed. Please try again.',
   INVALID_EMAIL: 'Please enter a valid email address.',
   INVALID_PASSWORD: 'Password must be at least 6 characters long.',
@@ -34,3 +35,4 @@ export const ERROR_MESSAGES = {
 export const SYNC_INTERVAL = 30000; // 30 seconds
 export const TASK_ITEM_HEIGHT = 80;
 export const DEBOUNCE_DELAY = 300;
+

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,21 +8,21 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useTheme } from '../../hooks/useTheme';
-import { AppDispatch, RootState } from '../../store/store';
-import { DatabaseService } from '../../database';
-import { createTask, updateTask } from '../../store/slices/taskSlice';
-import { NotificationService } from '../../services/notificationService';
-import { useNetworkStatus } from '../../hooks/useNetworkStatus';
-import { Button, Input } from '../../components';
+import {useTheme} from '../../hooks/useTheme';
+import {AppDispatch, RootState} from '../../store/store';
+import {DatabaseService} from '../../database';
+import {createTask, updateTask} from '../../store/slices/taskSlice';
+import {NotificationService} from '../../services/notificationService';
+import {useNetworkStatus} from '../../hooks/useNetworkStatus';
+import {Button, Input} from '../../components';
 
-export const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
-  const { theme } = useTheme();
+export const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
+  const {theme} = useTheme();
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { isOnline } = useNetworkStatus();
+  const {user} = useSelector((state: RootState) => state.auth);
+  const {isOnline} = useNetworkStatus();
 
   const taskId = route.params?.taskId;
   const isEditing = !!taskId;
@@ -82,20 +82,18 @@ export const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
 
     try {
       if (isEditing) {
-        // FIXED: Update task (instant, non-blocking)
+
         const result = await dispatch(
           updateTask({
             taskId,
-            updates: { title, description, reminderTime: finalReminderTime },
+            updates: {title, description, reminderTime: finalReminderTime},
           }),
         ).unwrap();
 
-        // FIXED: Cancel old notification first
         if (existingTask?.reminderTime) {
           await NotificationService.cancelTaskReminder(existingTask.id);
         }
 
-        // FIXED: Schedule new notification if reminder is set
         if (finalReminderTime && finalReminderTime > new Date()) {
           const taskWithReminder = {
             id: taskId,
@@ -107,27 +105,24 @@ export const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
           await NotificationService.scheduleTaskReminder(taskWithReminder);
         }
 
-        // Show success message with sync status
         if (isOnline) {
           Alert.alert('Success', 'Task updated and syncing...');
         } else {
           Alert.alert('Success', 'Task updated. Will sync when online.');
         }
       } else {
-        // FIXED: Create task (instant, non-blocking)
+
         const result = await dispatch(
           createTask({
             userId: user.uid,
-            taskData: { title, description, reminderTime: finalReminderTime },
+            taskData: {title, description, reminderTime: finalReminderTime},
           }),
         ).unwrap();
 
-        // Schedule notification
         if (finalReminderTime && finalReminderTime > new Date()) {
           await NotificationService.scheduleTaskReminder(result);
         }
 
-        // Show success message
         if (isOnline) {
           Alert.alert('Success', 'Task created and syncing...');
         } else {
@@ -182,23 +177,37 @@ export const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
 
   return (
     <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      style={[styles.container, {backgroundColor: theme.colors.background}]}
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled">
-
-      <View style={[styles.header, { backgroundColor: theme.colors.primary }]}>
+      <View style={[styles.header, {backgroundColor: theme.colors.primary}]}>
         <View style={styles.headerContent}>
           <View style={styles.headerLeft}>
             <Text style={styles.headerTitle}>
               {isEditing ? '✏️ Edit Task' : '✨ Create New Task'}
             </Text>
             <Text style={styles.headerSubtitle}>
-              {isEditing ? 'Update your task details' : 'Add a new task to your list'}
+              {isEditing
+                ? 'Update your task details'
+                : 'Add a new task to your list'}
             </Text>
           </View>
-          <View style={[styles.statusBadge, { backgroundColor: isOnline ? '#10B98120' : '#EF444420' }]}>
-            <View style={[styles.statusDot, { backgroundColor: isOnline ? '#10B981' : '#EF4444' }]} />
-            <Text style={[styles.statusText, { color: isOnline ? '#10B981' : '#EF4444' }]}>
+          <View
+            style={[
+              styles.statusBadge,
+              {backgroundColor: isOnline ? '#10B98120' : '#EF444420'},
+            ]}>
+            <View
+              style={[
+                styles.statusDot,
+                {backgroundColor: isOnline ? '#10B981' : '#EF4444'},
+              ]}
+            />
+            <Text
+              style={[
+                styles.statusText,
+                {color: isOnline ? '#10B981' : '#EF4444'},
+              ]}>
               {isOnline ? 'Online' : 'Offline'}
             </Text>
           </View>
@@ -207,30 +216,44 @@ export const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
 
       <View style={styles.form}>
         {!isOnline && (
-          <View style={[styles.offlineNotice, { backgroundColor: '#F59E0B20', borderColor: '#F59E0B' }]}>
+          <View
+            style={[
+              styles.offlineNotice,
+              {backgroundColor: '#F59E0B20', borderColor: '#F59E0B'},
+            ]}>
             <Text style={styles.offlineEmoji}>📵</Text>
             <View style={styles.offlineTextContainer}>
-              <Text style={[styles.offlineTitle, { color: '#F59E0B' }]}>You're Offline</Text>
-              <Text style={[styles.offlineMessage, { color: '#92400E' }]}>
-                Your task will be saved locally and synced when you're back online.
+              <Text style={[styles.offlineTitle, {color: '#F59E0B'}]}>
+                You're Offline
+              </Text>
+              <Text style={[styles.offlineMessage, {color: '#92400E'}]}>
+                Your task will be saved locally and synced when you're back
+                online.
               </Text>
             </View>
           </View>
         )}
 
         <View style={styles.section}>
-          <Text style={[styles.label, { color: theme.colors.text }]}>Task Title *</Text>
+          <Text style={[styles.label, {color: theme.colors.text}]}>
+            Task Title *
+          </Text>
           <Input
             placeholder="Enter task title"
             value={title}
-            onChangeText={(text) => { setTitle(text); setTitleError(''); }}
+            onChangeText={text => {
+              setTitle(text);
+              setTitleError('');
+            }}
             error={titleError}
             style={styles.input}
           />
         </View>
 
         <View style={styles.section}>
-          <Text style={[styles.label, { color: theme.colors.text }]}>Description</Text>
+          <Text style={[styles.label, {color: theme.colors.text}]}>
+            Description
+          </Text>
           <Input
             placeholder="Enter task description (optional)"
             value={description}
@@ -243,22 +266,54 @@ export const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
 
         <View style={styles.section}>
           <View style={styles.reminderHeader}>
-            <Text style={[styles.label, { color: theme.colors.text }]}>🔔 Set Reminder</Text>
+            <Text style={[styles.label, {color: theme.colors.text}]}>
+              🔔 Set Reminder
+            </Text>
             {(reminderDate || reminderTime) && (
-              <TouchableOpacity onPress={clearReminder} style={[styles.clearButton, { backgroundColor: `${theme.colors.error}15` }]}>
-                <Text style={[styles.clearText, { color: theme.colors.error }]}>Clear</Text>
+              <TouchableOpacity
+                onPress={clearReminder}
+                style={[
+                  styles.clearButton,
+                  {backgroundColor: `${theme.colors.error}15`},
+                ]}>
+                <Text style={[styles.clearText, {color: theme.colors.error}]}>
+                  Clear
+                </Text>
               </TouchableOpacity>
             )}
           </View>
 
           <TouchableOpacity
-            style={[styles.pickerButton, { backgroundColor: theme.colors.surface, borderColor: reminderDate ? theme.colors.primary : theme.colors.border, borderWidth: 2 }]}
+            style={[
+              styles.pickerButton,
+              {
+                backgroundColor: theme.colors.surface,
+                borderColor: reminderDate
+                  ? theme.colors.primary
+                  : theme.colors.border,
+                borderWidth: 2,
+              },
+            ]}
             onPress={() => setShowDatePicker(true)}>
             <View style={styles.pickerContent}>
-              <Text style={{ fontSize: 24 }}>📅</Text>
+              <Text style={{fontSize: 24}}>📅</Text>
               <View style={styles.pickerTextContainer}>
-                <Text style={[styles.pickerLabel, { color: theme.colors.textSecondary }]}>Date</Text>
-                <Text style={[styles.pickerValue, { color: reminderDate ? theme.colors.text : theme.colors.warning }]}>
+                <Text
+                  style={[
+                    styles.pickerLabel,
+                    {color: theme.colors.textSecondary},
+                  ]}>
+                  Date
+                </Text>
+                <Text
+                  style={[
+                    styles.pickerValue,
+                    {
+                      color: reminderDate
+                        ? theme.colors.text
+                        : theme.colors.warning,
+                    },
+                  ]}>
                   {formatDate(reminderDate)}
                 </Text>
               </View>
@@ -266,13 +321,36 @@ export const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.pickerButton, { backgroundColor: theme.colors.surface, borderColor: reminderTime ? theme.colors.primary : theme.colors.border, borderWidth: 2 }]}
+            style={[
+              styles.pickerButton,
+              {
+                backgroundColor: theme.colors.surface,
+                borderColor: reminderTime
+                  ? theme.colors.primary
+                  : theme.colors.border,
+                borderWidth: 2,
+              },
+            ]}
             onPress={() => setShowTimePicker(true)}>
             <View style={styles.pickerContent}>
-              <Text style={{ fontSize: 24 }}>⏰</Text>
+              <Text style={{fontSize: 24}}>⏰</Text>
               <View style={styles.pickerTextContainer}>
-                <Text style={[styles.pickerLabel, { color: theme.colors.textSecondary }]}>Time</Text>
-                <Text style={[styles.pickerValue, { color: reminderTime ? theme.colors.text : theme.colors.warning }]}>
+                <Text
+                  style={[
+                    styles.pickerLabel,
+                    {color: theme.colors.textSecondary},
+                  ]}>
+                  Time
+                </Text>
+                <Text
+                  style={[
+                    styles.pickerValue,
+                    {
+                      color: reminderTime
+                        ? theme.colors.text
+                        : theme.colors.warning,
+                    },
+                  ]}>
                   {formatTime(reminderTime)}
                 </Text>
               </View>
@@ -280,12 +358,25 @@ export const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
           </TouchableOpacity>
 
           {reminderDate && (
-            <View style={[styles.previewCard, { backgroundColor: `${theme.colors.success}10`, borderColor: theme.colors.success }]}>
-              <Text style={{ fontSize: 20, marginBottom: 4 }}>✅</Text>
-              <Text style={[styles.previewText, { color: theme.colors.success }]}>Reminder set for</Text>
-              <Text style={[styles.previewValue, { color: theme.colors.text }]}>{formatDate(reminderDate)}</Text>
+            <View
+              style={[
+                styles.previewCard,
+                {
+                  backgroundColor: `${theme.colors.success}10`,
+                  borderColor: theme.colors.success,
+                },
+              ]}>
+              <Text style={{fontSize: 20, marginBottom: 4}}>✅</Text>
+              <Text style={[styles.previewText, {color: theme.colors.success}]}>
+                Reminder set for
+              </Text>
+              <Text style={[styles.previewValue, {color: theme.colors.text}]}>
+                {formatDate(reminderDate)}
+              </Text>
               {reminderTime && (
-                <Text style={[styles.previewValue, { color: theme.colors.text }]}>at {formatTime(reminderTime)}</Text>
+                <Text style={[styles.previewValue, {color: theme.colors.text}]}>
+                  at {formatTime(reminderTime)}
+                </Text>
               )}
             </View>
           )}
@@ -323,36 +414,70 @@ export const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  content: { flexGrow: 1 },
-  header: { padding: 24, paddingTop: 32, paddingBottom: 32 },
-  headerContent: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  headerLeft: { flex: 1 },
-  headerTitle: { fontSize: 28, fontWeight: 'bold', color: '#FFFFFF', marginBottom: 8 },
-  headerSubtitle: { fontSize: 16, color: '#FFFFFF', opacity: 0.9 },
-  statusBadge: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, marginLeft: 12 },
-  statusDot: { width: 8, height: 8, borderRadius: 4, marginRight: 6 },
-  statusText: { fontSize: 12, fontWeight: '600' },
-  form: { padding: 20 },
-  offlineNotice: { flexDirection: 'row', padding: 16, borderRadius: 12, borderWidth: 1, marginBottom: 20 },
-  offlineEmoji: { fontSize: 24, marginRight: 12 },
-  offlineTextContainer: { flex: 1 },
-  offlineTitle: { fontSize: 16, fontWeight: '600', marginBottom: 4 },
-  offlineMessage: { fontSize: 14, lineHeight: 20 },
-  section: { marginBottom: 24 },
-  label: { fontSize: 16, fontWeight: '600', marginBottom: 12 },
-  input: { marginBottom: 0 },
-  textArea: { height: 100, textAlignVertical: 'top' },
-  reminderHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  clearButton: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12 },
-  clearText: { fontSize: 14, fontWeight: '600' },
-  pickerButton: { borderRadius: 16, padding: 16, marginBottom: 12 },
-  pickerContent: { flexDirection: 'row', alignItems: 'center' },
-  pickerTextContainer: { marginLeft: 12, flex: 1 },
-  pickerLabel: { fontSize: 12, marginBottom: 4 },
-  pickerValue: { fontSize: 16, fontWeight: '600' },
-  previewCard: { borderRadius: 16, padding: 16, borderWidth: 2, alignItems: 'center', marginTop: 8 },
-  previewText: { fontSize: 14, fontWeight: '600', marginBottom: 8 },
-  previewValue: { fontSize: 16, fontWeight: 'bold' },
-  saveButton: { marginTop: 8, height: 56 },
+  container: {flex: 1},
+  content: {flexGrow: 1},
+  header: {padding: 24, paddingTop: 32, paddingBottom: 32},
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  headerLeft: {flex: 1},
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 8,
+  },
+  headerSubtitle: {fontSize: 16, color: '#FFFFFF', opacity: 0.9},
+  statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    marginLeft: 12,
+  },
+  statusDot: {width: 8, height: 8, borderRadius: 4, marginRight: 6},
+  statusText: {fontSize: 12, fontWeight: '600'},
+  form: {padding: 20},
+  offlineNotice: {
+    flexDirection: 'row',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 20,
+  },
+  offlineEmoji: {fontSize: 24, marginRight: 12},
+  offlineTextContainer: {flex: 1},
+  offlineTitle: {fontSize: 16, fontWeight: '600', marginBottom: 4},
+  offlineMessage: {fontSize: 14, lineHeight: 20},
+  section: {marginBottom: 24},
+  label: {fontSize: 16, fontWeight: '600', marginBottom: 12},
+  input: {marginBottom: 0},
+  textArea: {height: 100, textAlignVertical: 'top'},
+  reminderHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  clearButton: {paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12},
+  clearText: {fontSize: 14, fontWeight: '600'},
+  pickerButton: {borderRadius: 16, padding: 16, marginBottom: 12},
+  pickerContent: {flexDirection: 'row', alignItems: 'center'},
+  pickerTextContainer: {marginLeft: 12, flex: 1},
+  pickerLabel: {fontSize: 12, marginBottom: 4},
+  pickerValue: {fontSize: 16, fontWeight: '600'},
+  previewCard: {
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 2,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  previewText: {fontSize: 14, fontWeight: '600', marginBottom: 8},
+  previewValue: {fontSize: 16, fontWeight: 'bold'},
+  saveButton: {marginTop: 8, height: 56},
 });
+

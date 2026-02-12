@@ -1,5 +1,5 @@
-// src/screens/auth/LoginScreen.tsx
-import React, { useState, useEffect } from 'react';
+
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,26 +9,28 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
+import {AuthStackParamList} from '../../types/navigation.types';
+import {useTheme} from '../../hooks/useTheme';
+import {useAuth} from '../../hooks/useAuth';
+import {validateEmail, validatePassword} from '../../utils/validators';
+import {ERROR_MESSAGES} from '../../utils/constants';
+import {Button, Input} from '../../components';
+import {SyncService} from '../../services/syncService';
 
-import { AuthStackParamList } from '../../types/navigation.types';
-import { useTheme } from '../../hooks/useTheme';
-import { useAuth } from '../../hooks/useAuth';
-import { validateEmail, validatePassword } from '../../utils/validators';
-import { ERROR_MESSAGES } from '../../utils/constants';
-import { Button, Input } from '../../components';
-import { SyncService } from '../../services/syncService';
-
-type LoginScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
+type LoginScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'Login'
+>;
 
 interface Props {
   navigation: LoginScreenNavigationProp;
 }
 
-export const LoginScreen: React.FC<Props> = ({ navigation }) => {
-  const { theme } = useTheme();
-  const { login, loading, error, clearError, user } = useAuth();
+export const LoginScreen: React.FC<Props> = ({navigation}) => {
+  const {theme} = useTheme();
+  const {login, loading, error, clearError, user} = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -52,7 +54,6 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
     return () => {
       SyncService.stopAutoSync();
     };
-
   }, [user]);
 
   const validateForm = (): boolean => {
@@ -79,20 +80,20 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
     if (!validateForm()) return;
 
     try {
-      await login({ email, password });
+      await login({email, password});
     } catch (err) {
-      // Error handled by useAuth hook
+
     }
   };
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      style={[styles.container, {backgroundColor: theme.colors.background}]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled">
-        <View style={[styles.content, { padding: theme.spacing.lg }]}>
+        <View style={[styles.content, {padding: theme.spacing.lg}]}>
           <Text
             style={[
               styles.title,
@@ -140,18 +141,18 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
             title="Login"
             onPress={handleLogin}
             loading={loading}
-            style={{ marginTop: theme.spacing.lg }}
+            style={{marginTop: theme.spacing.lg}}
           />
 
-          <View style={[styles.footer, { marginTop: theme.spacing.xl }]}>
-            <Text style={{ color: theme.colors.textSecondary }}>
+          <View style={[styles.footer, {marginTop: theme.spacing.xl}]}>
+            <Text style={{color: theme.colors.textSecondary}}>
               Don't have an account?{' '}
             </Text>
             <Button
               title="Sign Up"
               onPress={() => navigation.navigate('SignUp')}
               variant="outline"
-              style={{ marginTop: theme.spacing.sm }}
+              style={{marginTop: theme.spacing.sm}}
             />
           </View>
         </View>
@@ -182,3 +183,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+

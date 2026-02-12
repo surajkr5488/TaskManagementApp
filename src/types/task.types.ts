@@ -1,4 +1,4 @@
-// src/types/task.types.ts
+
 export interface Task {
   id: string;
   title: string;
@@ -23,3 +23,4 @@ export interface TaskState {
   error: string | null;
   syncStatus: 'idle' | 'syncing' | 'synced' | 'error';
 }
+

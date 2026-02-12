@@ -1,15 +1,9 @@
-// src/components/common/TaskItem.tsx
-import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import { useTheme } from '../../hooks/useTheme';
-import { formatDateTime } from '../../utils/helpers';
-import { Task } from '../../types/task.types';
 
+import React from 'react';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {useTheme} from '../../hooks/useTheme';
+import {formatDateTime} from '../../utils/helpers';
+import {Task} from '../../types/task.types';
 
 interface TaskItemProps {
   task: Task;
@@ -24,7 +18,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
   onToggleComplete,
   onDelete,
 }) => {
-  const { theme } = useTheme();
+  const {theme} = useTheme();
 
   return (
     <TouchableOpacity
@@ -111,7 +105,11 @@ export const TaskItem: React.FC<TaskItemProps> = ({
                       borderRadius: theme.borderRadius.sm,
                     },
                   ]}>
-                  <Text style={[styles.syncText, { fontSize: theme.typography.fontSize.xs }]}>
+                  <Text
+                    style={[
+                      styles.syncText,
+                      {fontSize: theme.typography.fontSize.xs},
+                    ]}>
                     Not Synced
                   </Text>
                 </View>
@@ -121,12 +119,9 @@ export const TaskItem: React.FC<TaskItemProps> = ({
         </View>
 
         <TouchableOpacity
-          style={[
-            styles.deleteButton,
-            { padding: theme.spacing.sm },
-          ]}
+          style={[styles.deleteButton, {padding: theme.spacing.sm}]}
           onPress={onDelete}>
-          <Text style={{ fontSize: 20 }}>🗑️</Text>
+          <Text style={{fontSize: 20}}>🗑️</Text>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -183,3 +178,4 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
 });
+

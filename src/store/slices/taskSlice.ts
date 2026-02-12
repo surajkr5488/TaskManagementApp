@@ -1,9 +1,9 @@
-// src/store/slices/taskSlice.ts
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Task, TaskFormData, TaskState } from '../../types/task.types';
-import { DatabaseService } from '../../database';
-import { TaskService } from '../../api/taskService';
-import { generateId } from '../../utils/helpers';
+
+import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
+import {Task, TaskFormData, TaskState} from '../../types/task.types';
+import {DatabaseService} from '../../database';
+import {TaskService} from '../../api/taskService';
+import {generateId} from '../../utils/helpers';
 
 const initialState: TaskState = {
   tasks: [],
@@ -12,16 +12,17 @@ const initialState: TaskState = {
   syncStatus: 'idle',
 };
 
-// FIXED: Fetch tasks from local DB first (instant)
 export const fetchTasks = createAsyncThunk(
   'tasks/fetchTasks',
-  async (userId: string, { rejectWithValue }) => {
+  async (userId: string, {rejectWithValue}) => {
     try {
       const localTasks = DatabaseService.getAllTasks(userId);
-      // Background sync (non-blocking)
-      TaskService.getUserTasks(userId).then(remoteTasks => {
-        // Merge logic handled by sync service
-      }).catch(() => {});
+
+      TaskService.getUserTasks(userId)
+        .then(remoteTasks => {
+
+        })
+        .catch(() => {});
       return localTasks;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -29,12 +30,11 @@ export const fetchTasks = createAsyncThunk(
   },
 );
 
-// FIXED: Create task instantly (non-blocking)
 export const createTask = createAsyncThunk(
   'tasks/createTask',
   async (
-    { userId, taskData }: { userId: string; taskData: TaskFormData },
-    { rejectWithValue },
+    {userId, taskData}: {userId: string; taskData: TaskFormData},
+    {rejectWithValue},
   ) => {
     try {
       const task: Task = {
@@ -49,10 +49,12 @@ export const createTask = createAsyncThunk(
         synced: false,
       };
       DatabaseService.createTask(task);
-      // Background sync (non-blocking)
-      TaskService.createTask(task).then(() => {
-        DatabaseService.markTaskAsSynced(task.id);
-      }).catch(() => {});
+
+      TaskService.createTask(task)
+        .then(() => {
+          DatabaseService.markTaskAsSynced(task.id);
+        })
+        .catch(() => {});
       return task;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -60,20 +62,21 @@ export const createTask = createAsyncThunk(
   },
 );
 
-// FIXED: Update task instantly (non-blocking)
 export const updateTask = createAsyncThunk(
   'tasks/updateTask',
   async (
-    { taskId, updates }: { taskId: string; updates: Partial<Task> },
-    { rejectWithValue },
+    {taskId, updates}: {taskId: string; updates: Partial<Task>},
+    {rejectWithValue},
   ) => {
     try {
-      DatabaseService.updateTask(taskId, { ...updates, synced: false });
-      // Background sync (non-blocking)
-      TaskService.updateTask(taskId, updates).then(() => {
-        DatabaseService.markTaskAsSynced(taskId);
-      }).catch(() => {});
-      return { taskId, updates: { ...updates, synced: false } };
+      DatabaseService.updateTask(taskId, {...updates, synced: false});
+
+      TaskService.updateTask(taskId, updates)
+        .then(() => {
+          DatabaseService.markTaskAsSynced(taskId);
+        })
+        .catch(() => {});
+      return {taskId, updates: {...updates, synced: false}};
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -82,7 +85,7 @@ export const updateTask = createAsyncThunk(
 
 export const deleteTask = createAsyncThunk(
   'tasks/deleteTask',
-  async (taskId: string, { rejectWithValue }) => {
+  async (taskId: string, {rejectWithValue}) => {
     try {
       DatabaseService.deleteTask(taskId);
       TaskService.deleteTask(taskId).catch(() => {});
@@ -95,14 +98,19 @@ export const deleteTask = createAsyncThunk(
 
 export const toggleTaskComplete = createAsyncThunk(
   'tasks/toggleTaskComplete',
-  async ({ taskId, completed }: { taskId: string; completed: boolean }, { rejectWithValue }) => {
+  async (
+    {taskId, completed}: {taskId: string; completed: boolean},
+    {rejectWithValue},
+  ) => {
     try {
-      const updates = { completed, synced: false };
+      const updates = {completed, synced: false};
       DatabaseService.updateTask(taskId, updates);
-      TaskService.updateTask(taskId, { completed }).then(() => {
-        DatabaseService.markTaskAsSynced(taskId);
-      }).catch(() => {});
-      return { taskId, updates };
+      TaskService.updateTask(taskId, {completed})
+        .then(() => {
+          DatabaseService.markTaskAsSynced(taskId);
+        })
+        .catch(() => {});
+      return {taskId, updates};
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -111,7 +119,7 @@ export const toggleTaskComplete = createAsyncThunk(
 
 export const syncTasks = createAsyncThunk(
   'tasks/syncTasks',
-  async (userId: string, { rejectWithValue }) => {
+  async (userId: string, {rejectWithValue}) => {
     try {
       const unsyncedTasks = DatabaseService.getUnsyncedTasks(userId);
       for (const task of unsyncedTasks) {
@@ -132,13 +140,15 @@ const taskSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    clearError: (state) => { state.error = null; },
+    clearError: state => {
+      state.error = null;
+    },
     setSyncStatus: (state, action: PayloadAction<TaskState['syncStatus']>) => {
       state.syncStatus = action.payload;
     },
   },
-  extraReducers: (builder) => {
-    builder.addCase(fetchTasks.pending, (state) => {
+  extraReducers: builder => {
+    builder.addCase(fetchTasks.pending, state => {
       state.loading = true;
       state.error = null;
     });
@@ -159,7 +169,7 @@ const taskSlice = createSlice({
     builder.addCase(updateTask.fulfilled, (state, action) => {
       const index = state.tasks.findIndex(t => t.id === action.payload.taskId);
       if (index !== -1) {
-        state.tasks[index] = { ...state.tasks[index], ...action.payload.updates };
+        state.tasks[index] = {...state.tasks[index], ...action.payload.updates};
       }
     });
     builder.addCase(deleteTask.fulfilled, (state, action) => {
@@ -168,17 +178,22 @@ const taskSlice = createSlice({
     builder.addCase(toggleTaskComplete.fulfilled, (state, action) => {
       const index = state.tasks.findIndex(t => t.id === action.payload.taskId);
       if (index !== -1) {
-        state.tasks[index] = { ...state.tasks[index], ...action.payload.updates };
+        state.tasks[index] = {...state.tasks[index], ...action.payload.updates};
       }
     });
-    builder.addCase(syncTasks.pending, (state) => { state.syncStatus = 'syncing'; });
+    builder.addCase(syncTasks.pending, state => {
+      state.syncStatus = 'syncing';
+    });
     builder.addCase(syncTasks.fulfilled, (state, action) => {
       state.syncStatus = 'synced';
       state.tasks = action.payload;
     });
-    builder.addCase(syncTasks.rejected, (state) => { state.syncStatus = 'error'; });
+    builder.addCase(syncTasks.rejected, state => {
+      state.syncStatus = 'error';
+    });
   },
 });
 
-export const { clearError, setSyncStatus } = taskSlice.actions;
+export const {clearError, setSyncStatus} = taskSlice.actions;
 export default taskSlice.reducer;
+

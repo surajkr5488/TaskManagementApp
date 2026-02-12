@@ -1,5 +1,5 @@
-// src/utils/helpers.ts
-import { Task } from '@types/task.types';
+
+import {Task} from '@types/task.types';
 
 export const generateId = (): string => {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -48,3 +48,4 @@ export const debounce = <T extends (...args: any[]) => any>(
     timeoutId = setTimeout(() => func(...args), delay);
   };
 };
+

@@ -1,5 +1,5 @@
-// src/components/common/Input.tsx
-import React, { useState } from 'react';
+
+import React, {useState} from 'react';
 import {
   View,
   TextInput,
@@ -8,8 +8,7 @@ import {
   TextInputProps,
   TouchableOpacity,
 } from 'react-native';
-import { useTheme } from '../../hooks/useTheme';
-
+import {useTheme} from '../../hooks/useTheme';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -24,7 +23,7 @@ export const Input: React.FC<InputProps> = ({
   style,
   ...rest
 }) => {
-  const { theme } = useTheme();
+  const {theme} = useTheme();
   const [isSecure, setIsSecure] = useState(secureTextEntry);
 
   const toggleSecureEntry = () => {
@@ -68,10 +67,10 @@ export const Input: React.FC<InputProps> = ({
           <TouchableOpacity
             style={[
               styles.eyeIcon,
-              { right: theme.spacing.md, top: theme.spacing.md },
+              {right: theme.spacing.md, top: theme.spacing.md},
             ]}
             onPress={toggleSecureEntry}>
-            <Text style={{ color: theme.colors.textSecondary }}>
+            <Text style={{color: theme.colors.textSecondary}}>
               {isSecure ? '👁️' : '👁️‍🗨️'}
             </Text>
           </TouchableOpacity>
@@ -115,3 +114,4 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
 });
+

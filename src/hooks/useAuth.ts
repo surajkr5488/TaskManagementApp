@@ -1,11 +1,9 @@
-// src/hooks/useAuth.ts
-import { useSelector, useDispatch } from 'react-redux';
 
+import {useSelector, useDispatch} from 'react-redux';
 
-
-import { AppDispatch, RootState } from '../store/store';
-import { clearError, login, logout, signUp } from '../store/slices/authSlice';
-import { LoginCredentials, SignUpCredentials } from '../types/auth.types';
+import {AppDispatch, RootState} from '../store/store';
+import {clearError, login, logout, signUp} from '../store/slices/authSlice';
+import {LoginCredentials, SignUpCredentials} from '../types/auth.types';
 
 export const useAuth = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,3 +36,4 @@ export const useAuth = () => {
     clearError: handleClearError,
   };
 };
+

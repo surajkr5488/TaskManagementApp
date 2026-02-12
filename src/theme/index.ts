@@ -1,6 +1,6 @@
-// src/theme/index.ts
-import { lightColors, darkColors, ThemeColors } from './colors';
-import { typography, Typography } from './typography';
+
+import {lightColors, darkColors, ThemeColors} from './colors';
+import {typography, Typography} from './typography';
 
 export interface Theme {
   colors: ThemeColors;
@@ -23,21 +23,21 @@ export interface Theme {
   shadows: {
     sm: {
       shadowColor: string;
-      shadowOffset: { width: number; height: number };
+      shadowOffset: {width: number; height: number};
       shadowOpacity: number;
       shadowRadius: number;
       elevation: number;
     };
     md: {
       shadowColor: string;
-      shadowOffset: { width: number; height: number };
+      shadowOffset: {width: number; height: number};
       shadowOpacity: number;
       shadowRadius: number;
       elevation: number;
     };
     lg: {
       shadowColor: string;
-      shadowOffset: { width: number; height: number };
+      shadowOffset: {width: number; height: number};
       shadowOpacity: number;
       shadowRadius: number;
       elevation: number;
@@ -70,21 +70,21 @@ export const lightTheme: Theme = {
   shadows: {
     sm: {
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
+      shadowOffset: {width: 0, height: 1},
       shadowOpacity: 0.18,
       shadowRadius: 1.0,
       elevation: 1,
     },
     md: {
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
+      shadowOffset: {width: 0, height: 2},
       shadowOpacity: 0.23,
       shadowRadius: 2.62,
       elevation: 4,
     },
     lg: {
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 4 },
+      shadowOffset: {width: 0, height: 4},
       shadowOpacity: 0.3,
       shadowRadius: 4.65,
       elevation: 8,
@@ -98,21 +98,21 @@ export const darkTheme: Theme = {
   shadows: {
     sm: {
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
+      shadowOffset: {width: 0, height: 1},
       shadowOpacity: 0.3,
       shadowRadius: 1.0,
       elevation: 1,
     },
     md: {
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
+      shadowOffset: {width: 0, height: 2},
       shadowOpacity: 0.35,
       shadowRadius: 2.62,
       elevation: 4,
     },
     lg: {
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 4 },
+      shadowOffset: {width: 0, height: 4},
       shadowOpacity: 0.4,
       shadowRadius: 4.65,
       elevation: 8,
@@ -120,4 +120,5 @@ export const darkTheme: Theme = {
   },
 };
 
-export { lightColors, darkColors, typography };
+export {lightColors, darkColors, typography};
+

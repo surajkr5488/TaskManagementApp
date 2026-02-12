@@ -1,10 +1,9 @@
-// src/api/taskService.ts
-import { Task } from '../types/task.types';
-import { firebaseFirestore, COLLECTIONS } from './firebaseConfig';
 
+import {Task} from '../types/task.types';
+import {firebaseFirestore, COLLECTIONS} from './firebaseConfig';
 
 export const TaskService = {
-  // Create task in Firestore
+
   createTask: async (task: Task): Promise<void> => {
     try {
       await firebaseFirestore()
@@ -21,7 +20,6 @@ export const TaskService = {
     }
   },
 
-  // Update task in Firestore
   updateTask: async (taskId: string, updates: Partial<Task>): Promise<void> => {
     try {
       await firebaseFirestore()
@@ -37,7 +35,6 @@ export const TaskService = {
     }
   },
 
-  // Delete task from Firestore
   deleteTask: async (taskId: string): Promise<void> => {
     try {
       await firebaseFirestore()
@@ -50,7 +47,6 @@ export const TaskService = {
     }
   },
 
-  // Get all tasks for a user
   getUserTasks: async (userId: string): Promise<Task[]> => {
     try {
       const snapshot = await firebaseFirestore()
@@ -79,7 +75,6 @@ export const TaskService = {
     }
   },
 
-  // Get single task
   getTask: async (taskId: string): Promise<Task | null> => {
     try {
       const doc = await firebaseFirestore()
@@ -107,7 +102,6 @@ export const TaskService = {
     }
   },
 
-  // Listen to task changes
   subscribeToUserTasks: (
     userId: string,
     onUpdate: (tasks: Task[]) => void,
@@ -135,3 +129,4 @@ export const TaskService = {
       });
   },
 };
+
